@@ -1,4 +1,4 @@
-# Gradle Kotlin AspectJ Weaver
+# Kotlin AspectJ Weaver Gradle Plugin
 
 A Gradle plugin that allows you to weave Java and Kotlin files with AspectJ.
 
