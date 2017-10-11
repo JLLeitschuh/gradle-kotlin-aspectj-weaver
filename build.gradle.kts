@@ -16,8 +16,8 @@ repositories {
 
 dependencies {
     compileOnly(gradleApi())
-    compileOnly(gradleScriptKotlinApi())
-    compileOnly(kotlinModule("gradle-plugin", "1.1.1"))
+    compileOnly(gradleKotlinDsl())
+    compileOnly(kotlin("gradle-plugin", "1.1.1"))
 }
 
 // Allows us to use groovy code in kotlin
@@ -32,5 +32,5 @@ tasks.getByName("classes").dependsOn(compileKotlin)
 
 
 task<Wrapper>("wrapper") {
-    gradleVersion = "3.5"
+    gradleVersion = "4.2"
 }
