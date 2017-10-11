@@ -23,7 +23,7 @@ open class AspectjPlugin : Plugin<Project> {
         val sourceSets = project.convention.findPlugin(JavaPluginConvention::class.java)!!.sourceSets
         val mainSourceSet = sourceSets.getByName("main")
         val testSourceSet = sourceSets.getByName("test")
-        val integTestSourceSet = sourceSets.getByName("integTest")
+        val integTestSourceSet = sourceSets.findByName("integTest")
         /*
          * This is a workaround for this:
          * https://youtrack.jetbrains.com/issue/KT-17035
@@ -35,17 +35,18 @@ open class AspectjPlugin : Plugin<Project> {
          * In the integration tests we want to make sure that we are using the aspectj weaved classes.
          * We need to undo what we just did for integTestSourceSet because the above configuration is inherited.
          */
-        integTestSourceSet.compileClasspath -= project.files(preWeaveDir)
-        integTestSourceSet.compileClasspath += project.files(mainSourceSet.output.classesDir)
+        integTestSourceSet?.apply { compileClasspath -= project.files(preWeaveDir) }
+        integTestSourceSet?.apply { compileClasspath += project.files(mainSourceSet.output.classesDir) }
         project.afterEvaluate {
-            val compileKotlin = project.tasks.getByName("copyMainKotlinClasses")
+            val aspectConfiguration = project.configurations.maybeCreate("aspects")
+            val compileKotlin = project.tasks.findByName("copyMainKotlinClasses")
 
             val compileAspect = project.taskHelper<AspectjTask>("compileAspect") {
                 inpath = project.files(preWeaveDir)
-                aspectPath = project.configurations.getByName("aspects").asFileTree
+                aspectPath = aspectConfiguration.asFileTree
                 classpath = mainSourceSet.compileClasspath
                 destDir = mainSourceSet.output.classesDir
-                dependsOn(compileJava, compileKotlin)
+                dependsOn(setOf(compileJava, compileKotlin).filterNotNull())
             }
 
             val classesTask = project.tasks.getByName("classes")

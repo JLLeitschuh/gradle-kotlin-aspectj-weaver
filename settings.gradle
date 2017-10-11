@@ -1,2 +1,0 @@
-includeBuild("plugin")
-includeBuild("sample")

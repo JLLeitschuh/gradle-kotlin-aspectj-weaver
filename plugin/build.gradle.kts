@@ -10,6 +10,9 @@ apply {
     plugin("groovy")
 }
 
+group = "org.jlleitschuh.aspectj"
+version = "0.0.1"
+
 repositories {
     mavenCentral()
 }
