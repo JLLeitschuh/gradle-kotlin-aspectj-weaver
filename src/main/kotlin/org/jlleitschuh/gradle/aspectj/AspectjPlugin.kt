@@ -20,7 +20,7 @@ open class AspectjPlugin : Plugin<Project> {
             destinationDir = preWeaveDir
         }
 
-        val sourceSets = project.convention.findPlugin(JavaPluginConvention::class.java).sourceSets
+        val sourceSets = project.convention.findPlugin(JavaPluginConvention::class.java)!!.sourceSets
         val mainSourceSet = sourceSets.getByName("main")
         val testSourceSet = sourceSets.getByName("test")
         val integTestSourceSet = sourceSets.getByName("integTest")
