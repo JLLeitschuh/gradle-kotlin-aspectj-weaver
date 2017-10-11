@@ -1,2 +1,2 @@
-rootProject.name = 'kotlin-aspectj-weaver'
-rootProject.buildFileName = "build.gradle.kts"
+includeBuild("plugin")
+includeBuild("sample")
