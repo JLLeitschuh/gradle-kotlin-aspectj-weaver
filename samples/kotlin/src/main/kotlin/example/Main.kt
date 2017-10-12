@@ -1,7 +1,8 @@
 package example
 
 object StaticStateVariable {
-    var wasAspectCalled = false
+    var wasSayHiAspectCalled = false
+    var wasReturnNothingAspectCalled = false
 }
 
 object MyApp {
@@ -9,6 +10,11 @@ object MyApp {
     fun sayHi() : String {
         println("Well hello there!")
         return "Hi!"
+    }
+
+    @JvmStatic
+    fun returnNothing() {
+        // Do nothing here either
     }
 }
 

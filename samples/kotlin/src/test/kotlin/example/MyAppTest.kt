@@ -7,6 +7,12 @@ class MyAppTest {
     @Test
     fun `test that aspect is called`() {
         MyApp.sayHi()
-        assertTrue(StaticStateVariable.wasAspectCalled)
+        assertTrue(StaticStateVariable.wasSayHiAspectCalled)
+    }
+
+    @Test
+    fun `test that return nothing aspect is called`() {
+        MyApp.returnNothing()
+        assertTrue(StaticStateVariable.wasReturnNothingAspectCalled)
     }
 }
