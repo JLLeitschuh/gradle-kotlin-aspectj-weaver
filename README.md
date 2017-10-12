@@ -12,3 +12,14 @@ This project supports weaving just Java classes or both Java and Kotlin code.
 
 This plugin could theoretically be adapted to weave other JVM languages but
 currently only supports Java.
+
+
+## Building Code
+
+This build uses Gradle's new
+[composite build](https://docs.gradle.org/4.1/userguide/composite_builds.html)
+feature to integration test several subprojects under the `samples` directory.
+
+If you want to run the samples and develop the plugin iteratively, then
+import the `samples/settings.gradle` file into ItelliJ.
+IntelliJ will figure out the rest.
