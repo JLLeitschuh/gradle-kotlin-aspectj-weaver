@@ -5,6 +5,7 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.tasks.compile.AbstractCompile
 import org.gradle.api.tasks.compile.JavaCompile
 
 /**
@@ -15,12 +16,13 @@ open class AspectjPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply(JavaPlugin::class.java)
         val ajcConfiguration = project.configurations.maybeCreate("ajc")
-        val preWeaveDir = project.file("${project.buildDir}/classes/mainPreWeave")
+        val preWeaveJavaDir = project.file("${project.buildDir}/classes/java/preWeave")
+        val preWeaveKotlinDir = project.file("${project.buildDir}/classes/kotlin/preWeave")
 
         val compileJava = (project.tasks.getByName("compileJava") as JavaCompile)
-        val oldCompileJavaDesinationDir = compileJava.destinationDir
+        val oldCompileJavaDestinationDir = compileJava.destinationDir
         compileJava.apply {
-            destinationDir = preWeaveDir
+            destinationDir = preWeaveJavaDir
         }
 
         val sourceSets = project.convention.findPlugin(JavaPluginConvention::class.java)!!.sourceSets
@@ -32,24 +34,28 @@ open class AspectjPlugin : Plugin<Project> {
          * https://youtrack.jetbrains.com/issue/KT-17035
          */
         // In unit tests, link against the classes that haven't been weaved yet
-        testSourceSet.compileClasspath -= project.files(mainSourceSet.output.classesDirs)
-        testSourceSet.compileClasspath += project.files(preWeaveDir)
+//        testSourceSet.compileClasspath -= project.files(mainSourceSet.output.classesDirs)
+//        testSourceSet.compileClasspath += project.files(preWeaveJavaDir)
         /*
          * In the integration tests we want to make sure that we are using the aspectj weaved classes.
          * We need to undo what we just did for integTestSourceSet because the above configuration is inherited.
          */
-        integTestSourceSet?.apply { compileClasspath -= project.files(preWeaveDir) }
+        integTestSourceSet?.apply { compileClasspath -= project.files(preWeaveJavaDir) }
         integTestSourceSet?.apply { compileClasspath += project.files(mainSourceSet.output.classesDir) }
         project.afterEvaluate {
+            val compileKotlin = (project.tasks.findByName("compileKotlin") as? AbstractCompile)
+            compileKotlin?.apply {
+                destinationDir = preWeaveKotlinDir
+            }
+
             val aspectConfiguration = project.configurations.maybeCreate("aspects")
-            val compileKotlin = project.tasks.findByName("copyMainKotlinClasses")
 
             val compileAspect = project.taskHelper<AspectjTask>("compileAspect") {
-                inpath = project.files(preWeaveDir)
+                inpath = project.files(preWeaveJavaDir, preWeaveKotlinDir)
                 this.ajcConfiguration = ajcConfiguration
                 aspectPath = aspectConfiguration.asFileTree
                 classpath = mainSourceSet.compileClasspath
-                destDir = oldCompileJavaDesinationDir
+                destDir = oldCompileJavaDestinationDir
                 dependsOn(setOf(compileJava, compileKotlin).filterNotNull())
             }
 

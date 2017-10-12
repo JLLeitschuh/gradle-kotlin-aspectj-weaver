@@ -12,10 +12,11 @@ public class KotlinTestAspect {
     public Object adviceSayMessage(final ProceedingJoinPoint call) throws Throwable {
         System.out.println("Test");
         StaticStateVariable.INSTANCE.setWasAspectCalled(true);
-        return call.proceed();
+        final Object returned = call.proceed();
+        return returned;
     }
 
-    @Pointcut("execution(static void MyApp.sayHi*(..))")
+    @Pointcut("execution(static String MyApp.sayHi*(..))")
     public void pointcutSayMessage() {
         // No code required here
     }

@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 buildscript {
     dependencies {
         classpath("org.jlleitschuh.aspectj:kotlin-aspectj-weaver:+")
@@ -21,6 +23,12 @@ subprojects {
         "ajc"(create(group = "org.aspectj", name = "aspectjtools", version = aspectJversion))
         "compile"(create(group = "org.aspectj", name = "aspectjweaver", version = aspectJversion))
         "testCompile"(create(group = "junit", name = "junit", version = "4.12"))
+    }
+
+    tasks.withType<Test> {
+        testLogging {
+            exceptionFormat = TestExceptionFormat.FULL
+        }
     }
 }
 
