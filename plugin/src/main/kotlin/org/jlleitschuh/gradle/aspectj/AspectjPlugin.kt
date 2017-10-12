@@ -30,7 +30,7 @@ open class AspectjPlugin : Plugin<Project> {
          * https://youtrack.jetbrains.com/issue/KT-17035
          */
         // In unit tests, link against the classes that haven't been weaved yet
-        testSourceSet.compileClasspath -= project.files(mainSourceSet.output.classesDir)
+        testSourceSet.compileClasspath -= project.files(mainSourceSet.output.classesDirs)
         testSourceSet.compileClasspath += project.files(preWeaveDir)
         /*
          * In the integration tests we want to make sure that we are using the aspectj weaved classes.
@@ -47,7 +47,7 @@ open class AspectjPlugin : Plugin<Project> {
                 this.ajcConfiguration = ajcConfiguration
                 aspectPath = aspectConfiguration.asFileTree
                 classpath = mainSourceSet.compileClasspath
-                destDir = mainSourceSet.output.classesDir
+                destDir = mainSourceSet.output.classesDirs.singleFile
                 dependsOn(setOf(compileJava, compileKotlin).filterNotNull())
             }
 
