@@ -17,7 +17,9 @@ open class AspectjPlugin : Plugin<Project> {
         val ajcConfiguration = project.configurations.maybeCreate("ajc")
         val preWeaveDir = project.file("${project.buildDir}/classes/mainPreWeave")
 
-        val compileJava = (project.tasks.getByName("compileJava") as JavaCompile).apply {
+        val compileJava = (project.tasks.getByName("compileJava") as JavaCompile)
+        val oldCompileJavaDesinationDir = compileJava.destinationDir
+        compileJava.apply {
             destinationDir = preWeaveDir
         }
 
@@ -47,7 +49,7 @@ open class AspectjPlugin : Plugin<Project> {
                 this.ajcConfiguration = ajcConfiguration
                 aspectPath = aspectConfiguration.asFileTree
                 classpath = mainSourceSet.compileClasspath
-                destDir = mainSourceSet.output.classesDirs.singleFile
+                destDir = oldCompileJavaDesinationDir
                 dependsOn(setOf(compileJava, compileKotlin).filterNotNull())
             }
 

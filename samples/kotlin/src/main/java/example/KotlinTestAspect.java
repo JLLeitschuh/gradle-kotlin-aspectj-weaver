@@ -6,16 +6,16 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
 @Aspect
-public class MannersAspect {
+public class KotlinTestAspect {
 
     @Around("pointcutSayMessage()")
     public Object adviceSayMessage(final ProceedingJoinPoint call) throws Throwable {
         System.out.println("Test");
-        StaticStateVariable.wasAspectCalled = true;
+        StaticStateVariable.INSTANCE.setWasAspectCalled(true);
         return call.proceed();
     }
 
-    @Pointcut("execution(public static void MyApp.sayHi*(..))")
+    @Pointcut("execution(static void MyApp.sayHi*(..))")
     public void pointcutSayMessage() {
         // No code required here
     }
