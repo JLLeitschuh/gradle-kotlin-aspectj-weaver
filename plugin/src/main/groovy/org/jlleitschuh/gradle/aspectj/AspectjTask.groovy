@@ -1,7 +1,9 @@
 package org.jlleitschuh.gradle.aspectj
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.file.FileCollection
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
@@ -12,6 +14,8 @@ class AspectjTask extends DefaultTask {
     FileCollection classpath
     @InputFiles
     FileCollection aspectPath
+    @Input
+    Configuration ajcConfiguration
     @InputFiles
     FileCollection inpath
 
@@ -24,7 +28,7 @@ class AspectjTask extends DefaultTask {
         project.delete(destDir.listFiles())
 
         ant.taskdef(resource: "org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties",
-                classpath: project.configurations.ajc.asPath)
+                classpath: ajcConfiguration.asPath)
 
         ant.iajc(
                 maxmem: "1024m", fork: "true", Xlint: "ignore",

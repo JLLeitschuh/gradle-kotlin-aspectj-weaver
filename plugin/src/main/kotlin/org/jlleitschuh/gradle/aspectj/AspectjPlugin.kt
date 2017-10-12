@@ -14,6 +14,7 @@ import org.gradle.api.tasks.compile.JavaCompile
 open class AspectjPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply(JavaPlugin::class.java)
+        val ajcConfiguration = project.configurations.maybeCreate("ajc")
         val preWeaveDir = project.file("${project.buildDir}/classes/mainPreWeave")
 
         val compileJava = (project.tasks.getByName("compileJava") as JavaCompile).apply {
@@ -43,6 +44,7 @@ open class AspectjPlugin : Plugin<Project> {
 
             val compileAspect = project.taskHelper<AspectjTask>("compileAspect") {
                 inpath = project.files(preWeaveDir)
+                this.ajcConfiguration = ajcConfiguration
                 aspectPath = aspectConfiguration.asFileTree
                 classpath = mainSourceSet.compileClasspath
                 destDir = mainSourceSet.output.classesDir
