@@ -28,7 +28,7 @@ open class AspectjPlugin : Plugin<Project> {
         val sourceSets = project.convention.findPlugin(JavaPluginConvention::class.java)!!.sourceSets
         val mainSourceSet = sourceSets.getByName("main")
         val testSourceSet = sourceSets.getByName("test")
-        val integTestSourceSet = sourceSets.findByName("integTest")
+//        val integTestSourceSet = sourceSets.findByName("integTest")
         /*
          * This is a workaround for this:
          * https://youtrack.jetbrains.com/issue/KT-17035
@@ -40,8 +40,8 @@ open class AspectjPlugin : Plugin<Project> {
          * In the integration tests we want to make sure that we are using the aspectj weaved classes.
          * We need to undo what we just did for integTestSourceSet because the above configuration is inherited.
          */
-        integTestSourceSet?.apply { compileClasspath -= project.files(preWeaveJavaDir) }
-        integTestSourceSet?.apply { compileClasspath += project.files(mainSourceSet.output.classesDir) }
+//        integTestSourceSet?.apply { compileClasspath -= project.files(preWeaveJavaDir) }
+//        integTestSourceSet?.apply { compileClasspath += project.files(mainSourceSet.output.classesDir) }
         project.afterEvaluate {
             val compileKotlin = (project.tasks.findByName("compileKotlin") as? AbstractCompile)
             compileKotlin?.apply {
