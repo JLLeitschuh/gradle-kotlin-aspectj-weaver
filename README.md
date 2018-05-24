@@ -13,6 +13,11 @@ This project supports weaving just Java classes or both Java and Kotlin code.
 This plugin could theoretically be adapted to weave other JVM languages but
 currently only supports Java.
 
+## Release Status
+
+If someone has a serious interest in having this plugin used in their builds, I'll be hapy to publish a release.
+I haven't done so yet because I don't have a use for this project anymore.
+Please open an issue requesting a release of the plugin if you are actually interested in using it.
 
 ## Building Code
 
